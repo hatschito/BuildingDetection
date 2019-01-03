@@ -2,28 +2,63 @@
 
 ## https://docs.qgis.org/testing/en/docs/pyqgis_developer_cookbook/expressions.html
 
+#TO DO: Add the path to the QGGIS specific python interpretor
 
-import requests
-import json
+
+#Ressources: 
+#https://geoscripting-wur.github.io/PythonWeek/
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+@Harald
+"""
+
+'''
+#Setup PyQGIS to use with external IDE
+QgsApplication.setPrefixPath("/usr", True)
+# Load providers
+QgsApplication.initQgis()
+# Show setting of parameters
+'''
+
+
+# Prepare the environment and initialize processing to call from external IDE e.g. Spyder or PyCharm 
+
 from qgis.core import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.PyQt.QtCore import *
+import sys
 import qgis.analysis
+sys.path.append('/usr/share/qgis/python/plugins')
+#Initialize Processing
+from processing.core.Processing import Processing
+Processing.initialize()
+from processing.tools import *
 import processing
+#from processing.core.Processing import Processing
+
+
+#Find path to python interpretpr
+import sys
+
+print(sys.executable)
+
+#Set the QGIS prefix to work outside QGIS
+qgis_prefix="/usr" 
 
 # I K-Means Filter
 
-rasterLyr = QgsRasterLayer("/home/administrator/Desktop/Python_Projects_Harald/Data/Madrid/LayerStackMadrid_Sentinel2.tif", "Madrid")
+test = QgsRasterLayer("/home/administrator/Desktop/Python_Projects_Harald/Data/Madrid/LayerStackMadrid_Sentinel2.tif", "Madrid")
 
-parameters = {'GRIDS': rasterLyr, 
+parameters = {'GRIDS': test, 
                 'METHOD': 1, 
                 'NCLUSTER': 7,
                 'MAXITER': 5,
                 'STATISTICS': "/home/administrator/Desktop/Python_Projects_Harald/Data/Results/statistics",
-                'CLUSTER': "/home/administrator/Desktop/Python_Projects_Harald/Data/Results/kmean"}
+                'CLUSTER': "/home/administrator/Desktop/Python_Projects_Harald/Data/Results/test"}
 
 processing.runAndLoadResults('saga:kmeansclusteringforgrids', parameters)
+
+
 
 
 #II Filter all values representing buildings using the raster calculator
